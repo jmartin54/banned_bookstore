@@ -32,6 +32,10 @@ Listing Smart contract + testing [4h]
 	Any state
 	- refund() -> refunded
 
+	Notes:
+		You might also want to update metadata/price etc
+		For now, you can delist and list new
+
 Market smart contract + testing [4h]
 	- address[]: unordered books
 	- mapping(address -> address[]): sellerToListings;
