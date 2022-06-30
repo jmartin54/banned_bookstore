@@ -1,11 +1,16 @@
 {
   "STATES": {
-    "CREATED": 0
+    "CREATED": 0,
+    "DELISTED": 1,
+    "ORDERED": 2
   },
   "price": 1000000000000000,
   "title": "1984",
   "author": "George Orwell",
   "isbn": "9780582060180",
   "description": "",
-  "condition": 10
+  "condition": 10,
+  "args": {
+    "shippingAddress": "123 Riverside Drive, USA, 10027"
+  }
 }
