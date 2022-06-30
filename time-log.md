@@ -5,12 +5,13 @@
 
 ### Listing smart contract + testing
 0.9	3:12 - 4:06	Add constructor and test
+0.2	4:06 - 4:18	Add state var
 
 
 0.0	00:00 - 00:00	
 
 ## Total time
 1.3 Planning
-0.9 Listing Contract
+1.1 Listing Contract
 
-2.2 Total
+2.4 Total

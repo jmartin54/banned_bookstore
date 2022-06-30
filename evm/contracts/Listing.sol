@@ -2,6 +2,8 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract Listing {
+  enum State { CREATED }
+  State public state;
   address public seller;
   uint public price;
 
@@ -12,7 +14,6 @@ contract Listing {
     string description;
     uint8 condition;
   }
-
   Book public book;
   constructor(
     address _seller, 
@@ -23,6 +24,7 @@ contract Listing {
     string memory _description,
     uint8 _condition
   ) {
+    state = State.CREATED;
     seller = _seller;
     price = _price;
     book = Book(_title, _author, _isbn, _description, _condition);

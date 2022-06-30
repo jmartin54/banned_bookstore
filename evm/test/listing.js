@@ -33,4 +33,7 @@ contract("Listing", function ([seller]) {
     assert.equal(DEFAULT.description, book.description));
   it("should init with a condition", async () =>
     assert.equal(DEFAULT.condition, book.condition));
+
+  it("should init in created state", async () =>
+    assert.equal(DEFAULT.STATES.CREATED, await deployed.state.call()));
 });

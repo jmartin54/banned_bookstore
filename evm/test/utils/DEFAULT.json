@@ -1,4 +1,7 @@
 {
+  "STATES": {
+    "CREATED": 0
+  },
   "price": 1000000000000000,
   "title": "1984",
   "author": "George Orwell",
