@@ -3,7 +3,8 @@
     "CREATED": 0,
     "DELISTED": 1,
     "ORDERED": 2,
-    "SHIPPED": 3
+    "SHIPPED": 3,
+    "SELLER_PAID_CONTRACT_CLOSED": 4
   },
   "price": 1000000000000000,
   "title": "1984",

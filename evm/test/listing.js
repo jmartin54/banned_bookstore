@@ -77,26 +77,44 @@ contract("Listing", function ([seller, buyer, other]) {
         assert.ok(/wrong state/.test(error.message), "wrong error");
       }
     }
-    // if (!state.eq(BN(DEFAULT.STATES.SHIPPED))) {
-    // refund
-    // withdraw
-    // }
+    if (!state.eq(BN(DEFAULT.STATES.SHIPPED))) {
+      // refund
+      try {
+        await contract.refundShipped({ from: seller });
+        assert.fail();
+      } catch (error) {
+        assert.ok(/wrong state/.test(error.message), "wrong error");
+      }
+      // withdraw
+      try {
+        await contract.withdraw({ from: seller });
+        assert.fail();
+      } catch (error) {
+        assert.ok(/wrong state/.test(error.message), "wrong error");
+      }
+    }
   }
-  async function assertRefund(contract, action) {
-    const contractBefore = await web3.eth.getBalance(contract.address);
-    const buyerBefore = await web3.eth.getBalance(buyer);
+  async function assertTransfer(action, from, to) {
+    const fromBefore = await web3.eth.getBalance(from);
+    const toBefore = await web3.eth.getBalance(to);
 
     await action();
 
-    const contractAfter = await web3.eth.getBalance(contract.address);
-    const buyerAfter = await web3.eth.getBalance(buyer);
+    const fromAfter = await web3.eth.getBalance(from);
+    const toAfter = await web3.eth.getBalance(to);
 
-    const dBuyer = BN(buyerAfter).sub(BN(buyerBefore));
+    const dTo = BN(toAfter).sub(BN(toBefore));
     const priceSubGas = BN(DEFAULT.price - DEFAULT.util.gasTolerance);
 
-    assert.equal(contractBefore, DEFAULT.price);
-    assert.equal(contractAfter, 0);
-    assert.ok(dBuyer.gt(priceSubGas));
+    assert.equal(fromBefore, DEFAULT.price);
+    assert.equal(fromAfter, 0);
+    assert.ok(dTo.gt(priceSubGas));
+  }
+  async function assertRefund(contract, action) {
+    return assertTransfer(action, contract.address, buyer);
+  }
+  async function assertSellerPaid(contract, action) {
+    return assertTransfer(action, contract.address, seller);
   }
   // tests
 
@@ -259,16 +277,59 @@ contract("Listing", function ([seller, buyer, other]) {
   });
 
   describe("should perform actions in the SHIPPED state", () => {
-    it("refunds if owner calls");
-    it("throws if not owner calls refund");
+    let listing;
+    beforeEach(async () => {
+      listing = await newListing();
+      await listing.order(DEFAULT.args.shippingAddress, {
+        from: buyer,
+        value: DEFAULT.price,
+      });
+      await listing.setShipped({ from: seller });
+    });
+    it("refunds if seller calls", async () => {
+      const action = () => listing.refundShipped({ from: seller });
+      await assertRefund(listing, action);
+      assert.equal(DEFAULT.STATES.CREATED, await listing.state.call());
+    });
+    it("throws if not seller calls refund", async () => {
+      try {
+        await listing.refundShipped({ from: other });
+      } catch (error) {
+        assert.ok(/only the seller/.test(error.message));
+      }
+    });
 
-    it("withdraws funds for owner");
-    it("throws if not owner withdraws");
+    it("withdraws funds for seller", async () => {
+      const action = () => listing.withdraw({ from: seller });
+      await assertSellerPaid(listing, action);
+      assert.equal(
+        DEFAULT.STATES.SELLER_PAID_CONTRACT_CLOSED,
+        await listing.state.call()
+      );
+    });
+    it("throws if not seller withdraws", async () => {
+      try {
+        await listing.withdraw({ from: other });
+      } catch (error) {
+        assert.ok(/only the seller/.test(error.message));
+      }
+    });
 
-    it("throws for all except, refund, withdraw");
+    it("throws for all except, refund, withdraw", () =>
+      assertStateRestrictions(listing));
   });
 
   describe("should not perform actions in the ESCROW_RELEASED state", () => {
-    it("throws for all actions");
+    let listing;
+    beforeEach(async () => {
+      listing = await newListing();
+      await listing.order(DEFAULT.args.shippingAddress, {
+        from: buyer,
+        value: DEFAULT.price,
+      });
+      await listing.setShipped({ from: seller });
+      await listing.withdraw({ from: seller });
+    });
+    it("throws for all actions", () => assertStateRestrictions(listing));
   });
 });

@@ -3,16 +3,19 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Listing {
 
-  // Data
+  // State Machine
 
-  enum State { CREATED, DELISTED, ORDERED, SHIPPED }
+  enum State { CREATED, DELISTED, ORDERED, SHIPPED, SELLER_PAID_CONTRACT_CLOSED }
+  State public state;
+  // Valid State Changes:
   // Created -> [Delisted, Ordered]
   // Delisted -> none
   // Ordered -> [Created (Canceled), Created (Rejected),  Delisted, Shipped]
   // Shipped -> [Created (Refunded), SellerPaidContractClosed]
   // SellerPaidContractClosed -> none
-  State public state;
-  address public seller;
+
+  // Data
+  address payable public seller;
   uint public price;
 
   struct Book {
@@ -56,7 +59,7 @@ contract Listing {
 
   // Functions
   constructor(
-    address _seller, 
+    address payable _seller, 
     uint _price, 
     string memory _title,
     string memory _author,
@@ -131,10 +134,27 @@ contract Listing {
   }
 
   // SHIPPED
-  // refundShipped
-  // withdraw
+  function refundShipped() 
+  public
+  onlyState(State.SHIPPED)
+  onlySeller()
+  {
+    state = State.CREATED;
+    _refund();
+  }
+  // refund shipped and delist?
 
-  // SELLERPAIDCONTRACTCLOSED — None
+  // withdraw
+  function withdraw()
+  public
+  onlyState(State.SHIPPED)
+  onlySeller()
+  {
+    state = State.SELLER_PAID_CONTRACT_CLOSED;
+    seller.transfer(address(this).balance);
+  }
+
+  // SELLER_PAID_CONTRACT_CLOSED — None
 
   // private
   function _refund() private {
