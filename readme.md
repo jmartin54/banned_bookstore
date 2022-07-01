@@ -35,6 +35,10 @@ Listing Smart contract + testing [4h]
 	Notes:
 		You might also want to update metadata/price etc
 		For now, you can delist and list new
+		
+		You could time lock withdraw for 1w after markShipped
+		Could allow dispute() from user during that week
+		Listing Factory Owner could settle dispute `settle(uint refundAmount) onlyOwner`
 
 Market smart contract + testing [4h]
 	- address[]: unordered books

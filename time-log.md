@@ -6,13 +6,13 @@
 ### Listing smart contract + testing
 0.9	3:12 - 4:06	Add constructor and test
 1.5	4:06 - 5:36	Add state var, delist, order
-
+0.2	9:12 - 9:24	Stub tests
 
 
 0.0	00:00 - 00:00	
 
 ## Total time
 1.3 Planning
-2.4 Listing Contract
+2.6 Listing Contract
 
-3.7 Total
+3.9 Total

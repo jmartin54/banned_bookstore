@@ -72,6 +72,7 @@ contract("Listing", function ([seller, buyer, other]) {
         assert.equal(DEFAULT.STATES.CREATED, state);
       }
     });
+    it("refunds on delist");
     it("set order with payment", async () => {
       await listing.order(DEFAULT.args.shippingAddress, {
         from: buyer,
@@ -103,5 +104,27 @@ contract("Listing", function ([seller, buyer, other]) {
     //   exceptions = ["delist", "order"];
     //   throwForAll(listing, exceptions);
     // });
+  });
+
+  describe("should not perform actions in DELISTED state", () => {
+    it("has a balance of 0");
+    it("throws for all actions");
+  });
+
+  describe("should perform actions in the ORDERED state", () => {
+    it("cancel order for buyer, and refunds");
+    it("throw when cancel order from not buyer");
+    it("rejects order for seller, and refunds");
+    it("throw when reject called from not seller");
+    it("rejects order and delists for seller, then refunds");
+    it("throw when reject and delist from not seller");
+    it("throws for all except, cancel, reject, and rejectAndDelist");
+  });
+
+  describe("should perform actions in the SHIPPED state", () => {
+    it("refunds if owner calls");
+    it("throws if not owner calls refund");
+    it("withdraws funds for owner");
+    it("throws if not owner withdraws");
   });
 });

@@ -6,6 +6,11 @@ contract Listing {
   // Data
 
   enum State { CREATED, DELISTED, ORDERED }
+  // Created -> [Delisted, Ordered]
+  // Delisted -> none
+  // Ordered -> [Shipped, Created (Rejected), Delisted]
+  // Shipped -> [Created (Refunded), EscrowReleasedContractClosed]
+  // EscrowReleasedContractClosed -> none
   State public state;
   address public seller;
   uint public price;
