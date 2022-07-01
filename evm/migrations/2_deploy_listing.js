@@ -1,4 +1,5 @@
 const Listing = artifacts.require("Listing");
+const ListingFactory = artifacts.require("ListingFactory");
 const DEFAULT = require("../test/utils/DEFAULT.json");
 
 module.exports = function (deployer, network, [seller]) {
@@ -6,6 +7,7 @@ module.exports = function (deployer, network, [seller]) {
     console.error("2_deploy_listing CANNOT HANDLE THIS NETWORK");
     return;
   }
+  deployer.deploy(ListingFactory);
   deployer.deploy(
     Listing,
     seller,

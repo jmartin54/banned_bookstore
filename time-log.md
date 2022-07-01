@@ -8,11 +8,15 @@
 1.5	4:06 - 5:36	Add state var, delist, order
 3.0	9:12 - 12:12	Stub tests, ordered functions, shipped functions
 
+### Market smart contract + testing
+2.0	2:30 - 4:00	ListingFactory tests, lots of time fixing null array
+
 
 0.0	00:00 - 00:00	
 
 ## Total time
 1.3 Planning
 5.5 Listing Contract
+2.0 Market Contract
 
-6.8 Total
+8.8 Total
