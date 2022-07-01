@@ -5,12 +5,12 @@ contract Listing {
 
   // Data
 
-  enum State { CREATED, DELISTED, ORDERED }
+  enum State { CREATED, DELISTED, ORDERED, SHIPPED }
   // Created -> [Delisted, Ordered]
   // Delisted -> none
-  // Ordered -> [Shipped, Created (Rejected), Delisted]
-  // Shipped -> [Created (Refunded), EscrowReleasedContractClosed]
-  // EscrowReleasedContractClosed -> none
+  // Ordered -> [Created (Canceled), Created (Rejected),  Delisted, Shipped]
+  // Shipped -> [Created (Refunded), SellerPaidContractClosed]
+  // SellerPaidContractClosed -> none
   State public state;
   address public seller;
   uint public price;
@@ -25,7 +25,7 @@ contract Listing {
   Book public book;
 
   struct Order {
-    address buyer;
+    address payable buyer;
     string shippingAddress;
   }
   Order public currentOrder;
@@ -37,8 +37,20 @@ contract Listing {
     _;
   }
 
+  modifier onlyBuyer() {
+    require(address(0) != currentOrder.buyer, "Listing: only the buyer can call this function, and none is set");
+    require(msg.sender == currentOrder.buyer, "Listing: only the buyer can call this function");
+    _;
+  }
+
   modifier onlyPaid() {
     require(msg.value >= price, "Listing: you did not meet the minimum price");
+    _;
+  }
+
+
+  modifier onlyState(State _state) {
+    require(state == _state, "Listing: the contract is in the wrong state for this function to be called");
     _;
   }
 
@@ -58,12 +70,74 @@ contract Listing {
     book = Book(_title, _author, _isbn, _description, _condition);
   }
 
-  function delist() public onlySeller() {
+// CREATED
+  function delist() 
+  public 
+  onlyState(State.CREATED) 
+  onlySeller()
+  {
     state = State.DELISTED;
   }
 
-  function order(string memory _shippingAddress) public payable onlyPaid() {
+  function order(
+    string memory _shippingAddress
+  ) 
+  public 
+  payable 
+  onlyState(State.CREATED) 
+  onlyPaid() 
+  {
     state = State.ORDERED;
-    currentOrder = Order(msg.sender, _shippingAddress);
+    currentOrder = Order(payable(msg.sender), _shippingAddress);
+  }
+
+// DELISTED — None
+
+// ORDERED
+  function cancel()
+  public 
+  onlyState(State.ORDERED) 
+  onlyBuyer()
+  {
+    state = State.CREATED;
+    _refund();
+  }
+
+  function reject()
+  public 
+  onlyState(State.ORDERED)
+  onlySeller() 
+  {
+    state = State.CREATED;
+    _refund();
+    currentOrder = Order(payable(0), "");
+  }
+
+  function rejectAndDelist() 
+  public
+  onlyState(State.ORDERED)
+  onlySeller() 
+  {
+    reject();
+    state = State.DELISTED;
+  }
+
+  function setShipped()
+  public
+  onlyState(State.ORDERED)
+  onlySeller()
+  {
+    state = State.SHIPPED;
+  }
+
+  // SHIPPED
+  // refundShipped
+  // withdraw
+
+  // SELLERPAIDCONTRACTCLOSED — None
+
+  // private
+  function _refund() private {
+    currentOrder.buyer.transfer(address(this).balance);
   }
 }

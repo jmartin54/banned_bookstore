@@ -2,7 +2,8 @@
   "STATES": {
     "CREATED": 0,
     "DELISTED": 1,
-    "ORDERED": 2
+    "ORDERED": 2,
+    "SHIPPED": 3
   },
   "price": 1000000000000000,
   "title": "1984",
@@ -12,5 +13,8 @@
   "condition": 10,
   "args": {
     "shippingAddress": "123 Riverside Drive, USA, 10027"
+  },
+  "util": {
+    "gasTolerance": 100000000000000
   }
 }
