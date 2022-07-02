@@ -4,7 +4,7 @@ import "./Listing.sol";
 contract ListingFactory {
   event ListedBook(address listing, address seller, uint price, string title, string author);
 
-  Listing[] public books;
+  Listing[] public listed;
   mapping(address => Listing[]) public sellerToListings;
   constructor() {
   }
@@ -19,6 +19,7 @@ contract ListingFactory {
   ) public {
 
     Listing listing = new Listing(
+      this,
       payable(msg.sender),
       _price, 
       _title, 
@@ -28,7 +29,7 @@ contract ListingFactory {
        _condition
     );
 
-    books.push(listing);
+    listed.push(listing);
     sellerToListings[msg.sender].push(listing);
 
     emit ListedBook(address(listing), msg.sender, _price, _title, _author);

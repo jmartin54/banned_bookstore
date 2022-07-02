@@ -32,7 +32,7 @@ contract("ListingFactory", function ([seller]) {
 
     it("should update book list", async () => {
       const deployed = await ListingFactory.deployed();
-      const address = await deployed.books.call(0);
+      const address = await deployed.listed.call(0);
 
       const listing = await Listing.at(address);
       const price = await listing.price.call();
@@ -51,15 +51,26 @@ contract("ListingFactory", function ([seller]) {
 
       assert.ok(web3.utils.isAddress(address));
     });
+
+    it("should attach factory as parent to Listing", async () => {
+      const deployed = await ListingFactory.deployed();
+      const address = await deployed.listed.call(0);
+      const listing = await Listing.at(address);
+      const factoryAddress = await listing.factory.call();
+      // const idOnFactory = await listing.idOnFactory.call();
+
+      // assert.equal(idOnFactory, 0);
+      assert.equal(deployed.address, factoryAddress);
+    });
   });
 
   describe("ListingFactory should update for Listing calls", () => {
-    it("should update buyer mapping on order");
-    it("should update buyer mapping on Listing.delist");
-    it("should update buyer mapping on Listing.order");
-    it("should update buyer mapping on Listing.cancel");
-    it("should update buyer mapping on Listing.reject");
-    it("should update buyer mapping on Listing.rejectAndDelist");
-    it("should update buyer mapping on Listing.refundShipped");
+    it("should update buyer mapping after Listing.order");
+    it("should update buyer mapping after Listing.delist");
+    it("should update buyer mapping after Listing.order");
+    it("should update buyer mapping after Listing.cancel");
+    it("should update buyer mapping after Listing.reject");
+    it("should update buyer mapping after Listing.rejectAndDelist");
+    it("should update buyer mapping after Listing.refundShipped");
   });
 });

@@ -10,13 +10,13 @@
 
 ### Market smart contract + testing
 2.0	2:30 - 4:00	ListingFactory tests, lots of time fixing null array
-
+1.9	4:00 - 5:54	Truffle won't deploy contract
 
 0.0	00:00 - 00:00	
 
 ## Total time
 1.3 Planning
 5.5 Listing Contract
-2.0 Market Contract
+3.9 Market Contract
 
-8.8 Total
+10.7 Total

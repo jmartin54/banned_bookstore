@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
+import "./ListingFactory.sol";
 
 contract Listing {
 
@@ -15,6 +16,7 @@ contract Listing {
   // SellerPaidContractClosed -> none
 
   // Data
+  ListingFactory public factory;
   address payable public seller;
   uint public price;
 
@@ -59,6 +61,7 @@ contract Listing {
 
   // Functions
   constructor(
+    ListingFactory _factory,
     address payable _seller, 
     uint _price, 
     string memory _title,
@@ -67,6 +70,7 @@ contract Listing {
     string memory _description,
     uint8 _condition
   ) {
+    factory = _factory;
     state = State.CREATED;
     seller = _seller;
     price = _price;
