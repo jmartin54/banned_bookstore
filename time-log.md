@@ -1,5 +1,6 @@
 ## Goal: Done by Friday, July 1 at 11:59 pm
 
+
 ## Thursday
 
 ### Planning
@@ -10,6 +11,7 @@
 1.5	4:06 - 5:36	Add state var, delist, order
 3.0	9:12 - 12:12	Stub tests, ordered functions, shipped functions
 
+
 ## Friday
 
 ### Market smart contract + testing
@@ -18,7 +20,11 @@
 Midnight: Goal not met
 2.5	1:00 - 3:30	Wiring ListingFactory to Listing
 
+
 ## Saturday
+
+### Setup react project
+0.0	00:00 - 00:00	
 
 
 0.0	00:00 - 00:00	
