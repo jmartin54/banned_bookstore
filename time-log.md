@@ -24,7 +24,7 @@ Midnight: Goal not met
 ## Saturday
 
 ### Setup react project
-0.0	00:00 - 00:00	
+1.0	4:06 - 5:06	cra, add routes, proj structure, copy contract script
 
 
 0.0	00:00 - 00:00	
@@ -33,5 +33,6 @@ Midnight: Goal not met
 1.3 Planning
 5.5 Listing Contract
 6.4 Market Contract
+1.0 Setup react project
 
-13.2 Total
+14.2 Total
