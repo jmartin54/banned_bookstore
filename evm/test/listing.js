@@ -16,16 +16,19 @@ contract("Listing", function ([seller, buyer, other]) {
   async function newListing() {
     const { price, title, author, isbn, description, condition } = DEFAULT;
     const factory = await ListingFactory.deployed();
-    return Listing.new(
-      factory.address,
-      seller,
+    const tx = await factory.listBook(
       price,
       title,
       author,
       isbn,
       description,
-      condition
+      condition,
+      {
+        from: seller,
+      }
     );
+
+    return Listing.at(tx.logs[0].args.listing);
   }
 
   async function assertStateRestrictions(contract) {

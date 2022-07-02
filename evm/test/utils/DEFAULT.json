@@ -16,6 +16,6 @@
     "shippingAddress": "123 Riverside Drive, USA, 10027"
   },
   "util": {
-    "gasTolerance": 100000000000000
+    "gasTolerance": 200000000000000
   }
 }
