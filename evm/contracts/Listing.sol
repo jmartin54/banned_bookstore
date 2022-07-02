@@ -17,6 +17,8 @@ contract Listing {
 
   // Data
   ListingFactory public factory;
+  uint public idOnFactory;
+
   address payable public seller;
   uint public price;
 
@@ -32,6 +34,7 @@ contract Listing {
   struct Order {
     address payable buyer;
     string shippingAddress;
+    uint buyerIdOnFactory;
   }
   Order public currentOrder;
 
@@ -62,6 +65,7 @@ contract Listing {
   // Functions
   constructor(
     ListingFactory _factory,
+    uint _idOnFactory,
     address payable _seller, 
     uint _price, 
     string memory _title,
@@ -71,6 +75,7 @@ contract Listing {
     uint8 _condition
   ) {
     factory = _factory;
+    idOnFactory = _idOnFactory;
     state = State.CREATED;
     seller = _seller;
     price = _price;
@@ -84,6 +89,8 @@ contract Listing {
   onlySeller()
   {
     state = State.DELISTED;
+    // TODO: factory.trackUnorder(this);
+    factory.removeUnordered(address(0), this);
   }
 
   function order(
@@ -95,7 +102,9 @@ contract Listing {
   onlyPaid() 
   {
     state = State.ORDERED;
-    currentOrder = Order(payable(msg.sender), _shippingAddress);
+    uint _buyerIdOnFactory = factory.removeUnordered(msg.sender, this);
+    // uint _buyerToListingsLength = factory.buyerToListings[msg.sender].push(this);
+    currentOrder = Order(payable(msg.sender), _shippingAddress, _buyerIdOnFactory);
   }
 
 // DELISTED — None
@@ -108,6 +117,7 @@ contract Listing {
   {
     state = State.CREATED;
     _refund();
+    factory.trackUnordered(this);
   }
 
   function reject()
@@ -117,7 +127,8 @@ contract Listing {
   {
     state = State.CREATED;
     _refund();
-    currentOrder = Order(payable(0), "");
+    currentOrder = Order(payable(0), "", 0);
+    factory.trackUnordered(this);
   }
 
   function rejectAndDelist() 
@@ -125,8 +136,9 @@ contract Listing {
   onlyState(State.ORDERED)
   onlySeller() 
   {
-    reject();
     state = State.DELISTED;
+    _refund();
+    currentOrder = Order(payable(0), "", 0);
   }
 
   function setShipped()
@@ -145,6 +157,7 @@ contract Listing {
   {
     state = State.CREATED;
     _refund();
+    factory.trackUnordered(this);
   }
   // refund shipped and delist?
 
