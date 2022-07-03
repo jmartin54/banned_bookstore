@@ -13,14 +13,15 @@ export default function AppRouter({ children }: AppRouterProps) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}></Route>
-        <Route path="/listing">
-          <Route index element={<ListingCreate />} />
-          <Route path="/listing/:address" element={<BookDetail />} />
+        <Route path="/" element={<App />}>
+          <Route path="/listing">
+            <Route index element={<ListingCreate />} />
+            <Route path="/listing/:address" element={<BookDetail />} />
+          </Route>
+          <Route path="/donate" element={<Donate />} />
+          <Route path="/emailList" element={<EmailList />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="/donate" element={<Donate />} />
-        <Route path="/emailList" element={<EmailList />} />
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
