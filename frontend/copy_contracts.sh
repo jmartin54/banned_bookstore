@@ -1,3 +1,3 @@
 #bin/bash
 
-cp ../evm/build/contracts/* ./src/contracts/
+cp ../evm/build/contracts/* ./src/contracts/build/

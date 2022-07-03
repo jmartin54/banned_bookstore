@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from "../App";
-import NotFound from "../pages/NotFound";
-import ListingCreate from "../pages/ListingCreate";
-import BookDetail from "../pages/BookDetail";
-import Donate from "../pages/Donate";
-import EmailList from "../pages/EmailList";
+import App from "./App";
+import NotFound from "./pages/NotFound";
+import ListingCreate from "./pages/ListingCreate";
+import BookDetail from "./pages/BookDetail";
+import Donate from "./pages/Donate";
+import EmailList from "./pages/EmailList";
 
 type AppRouterProps = {
   children?: React.ReactNode;
